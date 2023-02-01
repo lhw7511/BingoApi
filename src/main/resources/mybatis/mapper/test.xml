@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.BingoApi.mybatis.mapper.MyBatisTestMapper">
 
-    <select id="getMemberList" resultType="com.project.BingoApi.mybatis.dto.MyBatisTestDto" parameterType="com.project.BingoApi.mybatis.dto.MyBatisTestDto">
+    <select id="getMemberList" resultType="MyBatisTestDto" parameterType="MyBatisTestDto">
         SELECT ID
               ,name
         FROM MEMBER
