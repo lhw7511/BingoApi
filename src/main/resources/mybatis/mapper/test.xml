@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.BingoApi.mybatis.mapper.MyBatisTestMapper">
+
+    <select id="getMemberList" resultType="com.project.BingoApi.mybatis.dto.MyBatisTestDto" parameterType="com.project.BingoApi.mybatis.dto.MyBatisTestDto">
+        SELECT ID
+              ,name
+        FROM MEMBER
+        <if test="id != null">
+            WHERE ID = #{id}
+        </if>
+    </select>
+
+</mapper>
