@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,5 +21,9 @@ public class TestService {
         testRepository.save(member);
         Optional<Member> findOne = testRepository.findById(member.getId());
         return findOne.get();
+    }
+
+    public List<Member> getMemberList(Long id) throws  Exception{
+        return testRepository.getMemberList(id);
     }
 }

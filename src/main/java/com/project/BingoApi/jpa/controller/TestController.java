@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class TestController {
@@ -15,5 +17,10 @@ public class TestController {
     @GetMapping("test")
     public Member test(){
         return testService.save("testName");
+    }
+
+    @GetMapping("queryDslTest")
+    public List<Member> queryDslTest(Long id) throws  Exception{
+        return testService.getMemberList(id);
     }
 }
