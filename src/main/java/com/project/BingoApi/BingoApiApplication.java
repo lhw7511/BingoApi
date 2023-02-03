@@ -10,6 +10,10 @@ import javax.persistence.EntityManager;
 @SpringBootApplication
 public class BingoApiApplication {
 
+
+	static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(BingoApiApplication.class, args);
 	}
