@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 public class FileDto {
     private String id;
+    private String key;
     private String name;
     private String format;
-    private String path;
+    private String fileUrl;
     private long bytes;
 
     @Builder.Default
@@ -25,9 +26,9 @@ public class FileDto {
         final String format = MultipartUtil.getFormat(multipartFile.getContentType());
         return FileDto.builder()
                 .id(fileId)
+                .key(MultipartUtil.createPath(fileId,format))
                 .name(multipartFile.getOriginalFilename())
                 .format(format)
-                .path(MultipartUtil.createPath(fileId, format))
                 .bytes(multipartFile.getSize())
                 .build();
     }

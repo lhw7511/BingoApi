@@ -34,4 +34,10 @@ public class TestController {
     public FileDto fileUploadTest(@RequestPart("file") MultipartFile multipartFile){
         return amazonS3Component.save(multipartFile);
     }
+
+    @PostMapping("fileDeleteTest")
+    public String fileRemoveTest(FileDto fileDto){
+        amazonS3Component.delete(fileDto);
+        return "success";
+    }
 }
