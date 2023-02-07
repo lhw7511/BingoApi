@@ -1,6 +1,7 @@
 package com.project.BingoApi.aws.component;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.project.BingoApi.aws.dto.FileDto;
@@ -21,13 +22,13 @@ public class AmazonS3Component {
 
     public FileDto save(MultipartFile multipartFile) {
         FileDto fileDto = FileDto.multipartOf(multipartFile);
-        String fullPath = fileDto.getPath();
-        File file = new File(MultipartUtil.getLocalHomeDirectory(), fullPath);
+        String key = fileDto.getKey();
+        File file = new File(MultipartUtil.getLocalHomeDirectory(), key);
         try {
             multipartFile.transferTo(file);
-            amazonS3Client.putObject(new PutObjectRequest(bucket, fullPath, file)
+            amazonS3Client.putObject(new PutObjectRequest(bucket, key, file)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            fileDto.setPath(amazonS3Client.getUrl(bucket,multipartFile.getOriginalFilename()).toString());
+            fileDto.setFileUrl(amazonS3Client.getUrl(bucket,multipartFile.getOriginalFilename()).toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new RuntimeException();
@@ -37,5 +38,12 @@ public class AmazonS3Component {
             }
         }
         return fileDto;
+    }
+
+    public void delete(FileDto fileDto){
+        if (!amazonS3Client.doesObjectExist(bucket, fileDto.getKey())) {
+            throw new AmazonS3Exception("Object " +fileDto.getKey()+ " does not exist!");
+        }
+        amazonS3Client.deleteObject(bucket, fileDto.getKey());
     }
 }
