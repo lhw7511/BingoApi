@@ -9,27 +9,22 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "images_restaurant")
 @Getter
 @NoArgsConstructor
-public class ImagesRestaurant {
-
+public class ImageReview {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "images_restaurant_id")
+    @Column(name = "image_review_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurants restaurants;
-
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-
-    public void setRestaurants(Restaurants restaurants){
-        this.restaurants = restaurants;
-        restaurants.getImagesRestaurantsList().add(this);
+    public void setReview(Review review){
+        this.review = review;
+        review.getImageReviews().add(this);
     }
-
 }

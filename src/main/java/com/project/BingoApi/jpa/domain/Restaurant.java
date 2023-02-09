@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Restaurants {
+public class Restaurant {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
@@ -30,7 +30,10 @@ public class Restaurants {
     @Column(name = "open_times")
     private String openTime;
 
-    @OneToMany(mappedBy = "restaurants",cascade = CascadeType.ALL)
-    private List<ImagesRestaurant> imagesRestaurantsList = new ArrayList<>();
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    private List<ImageRestaurant> imagesRestaurants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
 }
