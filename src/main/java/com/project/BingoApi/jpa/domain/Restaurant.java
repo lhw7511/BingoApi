@@ -1,5 +1,6 @@
 package com.project.BingoApi.jpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,8 +31,10 @@ public class Restaurant {
     @Column(name = "open_times")
     private String openTime;
 
+
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<ImageRestaurant> imagesRestaurants = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
