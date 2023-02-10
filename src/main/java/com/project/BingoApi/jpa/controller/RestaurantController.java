@@ -18,8 +18,6 @@ public class RestaurantController {
 
     @GetMapping("restaurantList")
     public List<RestaurantDto> getList(){
-        return restaurantService.getRestaurantList()
-                .stream().map(restaurant -> new RestaurantDto(restaurant))
-                .collect(Collectors.toList());
+        return restaurantService.getTopAvgRatingList();
     }
 }

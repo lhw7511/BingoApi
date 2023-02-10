@@ -5,15 +5,18 @@ import com.project.BingoApi.jpa.domain.ImageRestaurant;
 import com.project.BingoApi.jpa.domain.Restaurant;
 import com.project.BingoApi.jpa.domain.Review;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class RestaurantDto {
 
     private Long restaurantId;
@@ -31,6 +34,8 @@ public class RestaurantDto {
     private String openTime;
 
     private List<ImageRestaurantDto> imagesRestaurants = new ArrayList<>();
+
+    private Double avgRating;
 
 
     public RestaurantDto(Restaurant restaurant) {

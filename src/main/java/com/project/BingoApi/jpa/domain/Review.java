@@ -32,7 +32,7 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private BigDecimal rating;
+    private Double rating;
 
     @OneToMany(mappedBy = "review",cascade = CascadeType.ALL)
     List<ImageReview> imageReviews = new ArrayList<>();
