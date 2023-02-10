@@ -9,13 +9,13 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "images_restaurant")
+@Table(name = "image_restaurant")
 @Getter
 @NoArgsConstructor
 public class ImageRestaurant {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "images_restaurant_id")
+    @Column(name = "image_restaurant_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -26,6 +26,8 @@ public class ImageRestaurant {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "image_key")
+    private String imageKey;
 
     public void setRestaurant(Restaurant restaurant){
         this.restaurant = restaurant;
