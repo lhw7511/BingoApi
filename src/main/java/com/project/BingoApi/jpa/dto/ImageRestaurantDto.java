@@ -3,10 +3,12 @@ package com.project.BingoApi.jpa.dto;
 
 import com.project.BingoApi.jpa.domain.ImageRestaurant;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 
 @Data
+@NoArgsConstructor
 public class ImageRestaurantDto {
 
     private Long imageRestaurantId;
