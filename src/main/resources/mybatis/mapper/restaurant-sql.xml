@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.BingoApi.mybatis.mapper.MbRestaurantMapper">
+
+    <select id="getTopAvgRestaurantList" resultMap="getTopAvgResult" >
+        SELECT  R.*,
+                RV.AVG_RATING,
+                IR.image_restaurant_id,
+                IR.image_url,
+                IR.image_key
+        FROM RESTAURANT R
+        INNER JOIN (SELECT
+                        AVG(RATING) AVG_RATING,
+                        RESTAURANT_ID
+                    FROM REVIEW
+                    GROUP BY RESTAURANT_ID
+                    LIMIT 6) RV
+        ON (R.RESTAURANT_ID = RV.RESTAURANT_ID)
+        LEFT JOIN IMAGE_RESTAURANT IR
+        ON R.RESTAURANT_ID = IR.RESTAURANT_ID
+        ORDER BY RV.AVG_RATING DESC
+
+    </select>
+
+    <resultMap id="getTopAvgResult" type="MbRestaurantDto">
+        <id column="restaurant_id" property="restaurantId"/>
+        <result column="lms_key" property="lmsKey"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="coordinate" property="coordinate"/>
+        <result column="open_time" property="openTime"/>
+        <result column="avg_rating" property="avgRating"/>
+        <collection property="imagesRestaurants" ofType="MbImageRestaurantDto" javaType="java.util.List">
+            <id column="image_restaurant_id" property="imageRestaurantId"/>
+            <result column="image_url" property="imageUrl"/>
+            <result column="image_key" property="imageKey"/>
+        </collection>
+
+    </resultMap>
+
+
+
+    <select id="getTopCntRestaurantList" resultMap="getTopCntResult" >
+        SELECT  R.*,
+        RV.CNT,
+        IR.image_restaurant_id,
+        IR.image_url,
+        IR.image_key
+        FROM RESTAURANT R
+        INNER JOIN (SELECT
+        COUNT(RATING) CNT,
+        RESTAURANT_ID
+        FROM REVIEW
+        GROUP BY RESTAURANT_ID
+        LIMIT 6) RV
+        ON (R.RESTAURANT_ID = RV.RESTAURANT_ID)
+        LEFT JOIN IMAGE_RESTAURANT IR
+        ON R.RESTAURANT_ID = IR.RESTAURANT_ID
+        ORDER BY RV.CNT DESC
+
+    </select>
+
+    <resultMap id="getTopCntResult" type="MbRestaurantDto">
+        <id column="restaurant_id" property="restaurantId"/>
+        <result column="lms_key" property="lmsKey"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="coordinate" property="coordinate"/>
+        <result column="open_time" property="openTime"/>
+        <result column="cnt" property="cnt"/>
+        <collection property="imagesRestaurants" ofType="MbImageRestaurantDto" javaType="java.util.List">
+            <id column="image_restaurant_id" property="imageRestaurantId"/>
+            <result column="image_url" property="imageUrl"/>
+            <result column="image_key" property="imageKey"/>
+        </collection>
+
+    </resultMap>
+
+</mapper>
