@@ -34,7 +34,8 @@
         <result column="name" property="name"/>
         <result column="address" property="address"/>
         <result column="phone_number" property="phoneNumber"/>
-        <result column="coordinate" property="coordinate"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
         <result column="open_time" property="openTime"/>
         <result column="avg_rating" property="avgRating"/>
 
@@ -83,7 +84,8 @@
         <result column="name" property="name"/>
         <result column="address" property="address"/>
         <result column="phone_number" property="phoneNumber"/>
-        <result column="coordinate" property="coordinate"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
         <result column="open_time" property="openTime"/>
         <result column="cnt" property="cnt"/>
 

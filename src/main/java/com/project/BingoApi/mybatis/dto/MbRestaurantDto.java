@@ -21,7 +21,9 @@ public class MbRestaurantDto {
 
     private String phoneNumber;
 
-    private String coordinate;
+    private String latitude;
+
+    private String longitude;
 
     private String openTime;
 
