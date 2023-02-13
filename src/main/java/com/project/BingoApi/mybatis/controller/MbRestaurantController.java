@@ -16,7 +16,7 @@ public class MbRestaurantController {
     private final MbRestaurantService mbRestaurantService;
 
     @RequestMapping("mainList")
-    public HashMap<String,List<MbRestaurantDto>> mainList() throws  Exception{
+    public HashMap<String,Object> mainList() throws  Exception{
         return mbRestaurantService.getMainList();
     }
 }

@@ -16,10 +16,11 @@ public class MbRestaurantService {
     private  final MbRestaurantMapper mbRestaurantMapper;
 
 
-    public HashMap<String,List<MbRestaurantDto>> getMainList(){
-        HashMap<String,List<MbRestaurantDto>> result = new HashMap<>();
+    public HashMap<String,Object> getMainList(){
+        HashMap<String,Object> result = new HashMap<>();
         result.put("topAvg",mbRestaurantMapper.getTopAvgRestaurantList());
         result.put("topCount",mbRestaurantMapper.getTopCntRestaurantList());
+        result.put("topRegion",mbRestaurantMapper.getTopRegionList());
         return result;
     }
 }
