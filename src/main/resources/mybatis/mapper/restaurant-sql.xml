@@ -14,7 +14,7 @@
                 RG.REGION_NAME
         FROM RESTAURANT R
         INNER JOIN (SELECT
-                        AVG(RATING) AVG_RATING,
+                        ROUND(AVG(RATING),1) AVG_RATING,
                         RESTAURANT_ID
                     FROM REVIEW
                     GROUP BY RESTAURANT_ID
