@@ -40,7 +40,7 @@
         <result column="longitude" property="longitude"/>
         <result column="open_time" property="openTime"/>
         <result column="avg_rating" property="avgRating"/>
-
+        <result column="cnt" property="cnt"/>
         <association property="region" javaType="MbRegionDto">
             <id column="region_id" property="regionId"/>
             <result column="region_name" property="regionName"/>
@@ -92,6 +92,7 @@
         <result column="longitude" property="longitude"/>
         <result column="open_time" property="openTime"/>
         <result column="cnt" property="cnt"/>
+        <result column="avg_rating" property="avgRating"/>
 
         <association property="region" javaType="MbRegionDto">
             <id column="region_id" property="regionId"/>
