@@ -16,6 +16,7 @@
         <typeAlias alias="MyBatisTestDto" type="com.project.BingoApi.mybatis.dto.MyBatisTestDto"/>
         <typeAlias alias="MbImageRestaurantDto" type="com.project.BingoApi.mybatis.dto.MbImageRestaurantDto"/>
         <typeAlias alias="MbRestaurantDto" type="com.project.BingoApi.mybatis.dto.MbRestaurantDto"/>
+        <typeAlias alias="MbRegionDto" type="com.project.BingoApi.mybatis.dto.MbRegionDto"/>
     </typeAliases>
 
 </configuration>
