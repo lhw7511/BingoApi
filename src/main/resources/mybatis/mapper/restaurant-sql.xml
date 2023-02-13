@@ -100,4 +100,19 @@
 
     </resultMap>
 
+
+    <select id="getTopRegionList" resultType="MbRegionDto">
+        SELECT RG.REGION_ID,
+                RG.REGION_NAME,
+                RG.REGION_IMAGE_URL
+        FROM REGION RG
+        INNER JOIN (SELECT
+                        REGION_ID,
+                        COUNT(REGION_ID) CNT
+                        FROM RESTAURANT
+                        GROUP BY REGION_ID) R
+        ON RG.REGION_ID  = R.REGION_ID
+        ORDER BY CNT DESC
+        LIMIT 6
+    </select>
 </mapper>
