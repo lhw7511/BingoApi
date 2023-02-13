@@ -9,7 +9,9 @@
                 RV.AVG_RATING,
                 IR.image_restaurant_id,
                 IR.image_url,
-                IR.image_key
+                IR.image_key,
+                RG.REGION_ID,
+                RG.REGION_NAME
         FROM RESTAURANT R
         INNER JOIN (SELECT
                         AVG(RATING) AVG_RATING,
@@ -20,6 +22,8 @@
         ON (R.RESTAURANT_ID = RV.RESTAURANT_ID)
         LEFT JOIN IMAGE_RESTAURANT IR
         ON R.RESTAURANT_ID = IR.RESTAURANT_ID
+        LEFT JOIN REGION RG
+        ON R.REGION_ID = RG.REGION_ID
         ORDER BY RV.AVG_RATING DESC
 
     </select>
@@ -33,6 +37,12 @@
         <result column="coordinate" property="coordinate"/>
         <result column="open_time" property="openTime"/>
         <result column="avg_rating" property="avgRating"/>
+
+        <association property="region" javaType="MbRegionDto">
+            <id column="region_id" property="regionId"/>
+            <result column="region_name" property="regionName"/>
+        </association>
+
         <collection property="imagesRestaurants" ofType="MbImageRestaurantDto" javaType="java.util.List">
             <id column="image_restaurant_id" property="imageRestaurantId"/>
             <result column="image_url" property="imageUrl"/>
@@ -45,20 +55,24 @@
 
     <select id="getTopCntRestaurantList" resultMap="getTopCntResult" >
         SELECT  R.*,
-        RV.CNT,
-        IR.image_restaurant_id,
-        IR.image_url,
-        IR.image_key
+                RV.CNT,
+                IR.image_restaurant_id,
+                IR.image_url,
+                IR.image_key,
+                RG.REGION_ID,
+                RG.REGION_NAME
         FROM RESTAURANT R
-        INNER JOIN (SELECT
-        COUNT(RATING) CNT,
-        RESTAURANT_ID
-        FROM REVIEW
-        GROUP BY RESTAURANT_ID
-        LIMIT 6) RV
+        INNER JOIN  (SELECT
+                    COUNT(RATING) CNT,
+                    RESTAURANT_ID
+                    FROM REVIEW
+                    GROUP BY RESTAURANT_ID
+                    LIMIT 6) RV
         ON (R.RESTAURANT_ID = RV.RESTAURANT_ID)
         LEFT JOIN IMAGE_RESTAURANT IR
         ON R.RESTAURANT_ID = IR.RESTAURANT_ID
+        LEFT JOIN REGION RG
+        ON R.REGION_ID = RG.REGION_ID
         ORDER BY RV.CNT DESC
 
     </select>
@@ -72,6 +86,12 @@
         <result column="coordinate" property="coordinate"/>
         <result column="open_time" property="openTime"/>
         <result column="cnt" property="cnt"/>
+
+        <association property="region" javaType="MbRegionDto">
+            <id column="region_id" property="regionId"/>
+            <result column="region_name" property="regionName"/>
+        </association>
+
         <collection property="imagesRestaurants" ofType="MbImageRestaurantDto" javaType="java.util.List">
             <id column="image_restaurant_id" property="imageRestaurantId"/>
             <result column="image_url" property="imageUrl"/>

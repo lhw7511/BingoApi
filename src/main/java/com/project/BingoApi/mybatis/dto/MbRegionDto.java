@@ -5,11 +5,12 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL) // Null 값인 필드 제외
-public class MbImageRestaurantDto {
+public class MbRegionDto {
 
-    private Long imageRestaurantId;
+    private Long regionId;
 
-    private String imageUrl;
+    private String regionName;
 
-    private String imageKey;
+    private String regionImageUrl;
+
 }
