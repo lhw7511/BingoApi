@@ -1,27 +1,29 @@
 package com.project.BingoApi.jpa.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.BingoApi.jpa.domain.ImageRestaurant;
-import com.project.BingoApi.jpa.domain.Restaurant;
-import com.project.BingoApi.jpa.domain.Review;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.project.BingoApi.jpa.domain.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // Null 값인 필드 제외
 public class RestaurantDto {
 
     private Long restaurantId;
 
-    private String lmsKey;
+    private CategoryDto category;
+
+    private RegionDto region;
 
     private String name;
 
@@ -29,7 +31,9 @@ public class RestaurantDto {
 
     private String phoneNumber;
 
-    private String coordinate;
+    private String latitude;
+
+    private String longitude;
 
     private String openTime;
 
@@ -37,17 +41,26 @@ public class RestaurantDto {
 
     private Double avgRating;
 
+    private Long cnt;
 
-    public RestaurantDto(Restaurant restaurant) {
-        restaurantId = restaurant.getId();
-        name = restaurant.getName();
-        lmsKey = restaurant.getLmsKey();
-        address = restaurant.getAddress();
-        phoneNumber = restaurant.getPhoneNumber();
-        coordinate = restaurant.getCoordinate();
-        openTime = restaurant.getOpenTime();
-        restaurant.getImagesRestaurants().stream().forEach(r -> r.getImageUrl());
-        imagesRestaurants = restaurant.getImagesRestaurants().stream().map(imageRestaurant -> new ImageRestaurantDto(imageRestaurant))
-                .collect(Collectors.toList());
+
+
+
+    public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt){
+            this.restaurantId = restaurant.getId();
+            this.name = restaurant.getName();
+            this.address = restaurant.getAddress();
+            this.phoneNumber = restaurant.getPhoneNumber();
+            this.latitude = restaurant.getLatitude();
+            this.longitude = restaurant.getLongitude();
+            this.openTime = restaurant.getOpenTime();
+            this.category = new CategoryDto(restaurant.getCategory());
+            this.region = new RegionDto(restaurant.getRegion());
+            this.avgRating = avgRating;
+            this.cnt = cnt;
+            restaurant.getImagesRestaurants().stream().forEach(r -> r.getImageUrl());
+            imagesRestaurants = restaurant.getImagesRestaurants().stream().map(imageRestaurant -> new ImageRestaurantDto(imageRestaurant))
+                    .collect(Collectors.toList());
     }
+
 }

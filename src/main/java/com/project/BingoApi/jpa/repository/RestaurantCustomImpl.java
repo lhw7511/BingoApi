@@ -1,19 +1,23 @@
 package com.project.BingoApi.jpa.repository;
 
-import com.project.BingoApi.jpa.domain.QImageRestaurant;
-import com.project.BingoApi.jpa.domain.QRestaurant;
-import com.project.BingoApi.jpa.domain.QReview;
-import com.project.BingoApi.jpa.domain.Restaurant;
+import com.project.BingoApi.jpa.domain.*;
+import com.project.BingoApi.jpa.dto.MainParamDto;
 import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.project.BingoApi.jpa.domain.QImageRestaurant.*;
+import static com.project.BingoApi.jpa.domain.QCategory.*;
+import static com.project.BingoApi.jpa.domain.QRegion.region;
 import static com.project.BingoApi.jpa.domain.QRestaurant.restaurant;
 import static com.project.BingoApi.jpa.domain.QReview.review;
 
@@ -24,27 +28,42 @@ public class RestaurantCustomImpl implements RestaurantCustom{
 
 
     @Override
-    public List<RestaurantDto> getTopAvgRatingList() {
-        List<Restaurant> restaurantList = jpaQueryFactory.select(restaurant
+    public Page<RestaurantDto> getMainList(MainParamDto mainParamDto, Pageable pageable) {
+        List<Tuple> result = jpaQueryFactory.select(
+                        restaurant,
+                        MathExpressions.round(review.rating.avg(),1),
+                        review.rating.count()
                 )
                 .from(restaurant)
-                .join(restaurant.reviews, review)
+                .leftJoin(restaurant.reviews, review)
+                .leftJoin(restaurant.category, category).fetchJoin()
+                .leftJoin(restaurant.region, region).fetchJoin()
                 .groupBy(restaurant.id)
-                .orderBy(review.rating.avg().desc())
-                .limit(4)
+                .orderBy(sortStandard(mainParamDto))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        List<RestaurantDto> avgRatingList = jpaQueryFactory.select(Projections.bean(RestaurantDto.class, review.rating.avg().as("avgRating"))
-                )
-                .from(restaurant)
-                .join(restaurant.reviews, review)
-                .groupBy(restaurant.id)
-                .orderBy(review.rating.avg().desc())
-                .limit(4)
-                .fetch();
-        List<RestaurantDto>  restaurantDtos = restaurantList.stream().map(r -> new RestaurantDto(r)).collect(Collectors.toList());
-        for(int i = 0; i < restaurantDtos.size(); i++){
-            restaurantDtos.get(i).setAvgRating(avgRatingList.get(0).getAvgRating());
+
+        JPAQuery<Long> total = jpaQueryFactory.select(
+                    restaurant.count()
+            )
+            .from(restaurant);
+
+
+        List<RestaurantDto> resultList = new ArrayList<>();
+        for(Tuple tuple : result){
+            Restaurant tmpRestaurant = tuple.get(restaurant);
+            Double avgRating = tuple.get(MathExpressions.round(review.rating.avg(),1));
+            Long cnt = tuple.get(review.rating.count());
+            resultList.add(new RestaurantDto(tmpRestaurant,avgRating,cnt));
         }
-        return restaurantDtos;
+        return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
+    }
+
+    private OrderSpecifier<?> sortStandard(MainParamDto mainParamDto) {
+        if("avg".equals(mainParamDto.getGubun())){
+            return review.rating.avg().desc();
+        }
+        return review.rating.count().desc();
     }
 }
