@@ -2,6 +2,7 @@ package com.project.BingoApi.jpa.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -23,6 +24,7 @@ public class Review {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "restaurant_id")
+    @Setter
     private Restaurant restaurant;
 
     @Column(name = "user_id")
@@ -37,8 +39,10 @@ public class Review {
     @OneToMany(mappedBy = "review",cascade = CascadeType.ALL)
     List<ImageReview> imageReviews = new ArrayList<>();
 
-    public void setRestaurant(Restaurant restaurant){
-        this.restaurant = restaurant;
-        restaurant.getReviews().add(this);
+
+
+    public void setImageReviews(ImageReview imageReview){
+        this.imageReviews.add(imageReview);
+        imageReview.setReview(this);
     }
 }

@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -17,7 +19,14 @@ public class Restaurant {
     @Column(name = "restaurant_id")
     private Long id;
 
-    private String lmsKey;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "category_key")
+    private Category category;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "region_Id")
+    private Region region;
 
     private String name;
 
@@ -26,9 +35,11 @@ public class Restaurant {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    private String coordinate;
+    private String latitude;
 
-    @Column(name = "open_times")
+    private String longitude;
+
+    @Column(name = "open_time")
     private String openTime;
 
 
@@ -39,4 +50,24 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+
+    public void setImagesRestaurants(ImageRestaurant imageRestaurant) {
+        this.imagesRestaurants.add(imageRestaurant);
+        imageRestaurant.setRestaurant(this);
+    }
+
+    public void setReviews(Review review){
+        this.reviews.add(review);
+        review.setRestaurant(this);
+    }
+
+    public void setCategory(Category category){
+        this.category = category;
+        category.getRestaurants().add(this);
+    }
+
+    public void setRegion(Region region){
+        this.region = region;
+        region.getRestaurants().add(this);
+    }
 }

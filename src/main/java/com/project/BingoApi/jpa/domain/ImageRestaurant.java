@@ -3,6 +3,7 @@ package com.project.BingoApi.jpa.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -20,6 +21,7 @@ public class ImageRestaurant {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "restaurant_id")
+    @Setter
     private Restaurant restaurant;
 
 
@@ -29,9 +31,6 @@ public class ImageRestaurant {
     @Column(name = "image_key")
     private String imageKey;
 
-    public void setRestaurant(Restaurant restaurant){
-        this.restaurant = restaurant;
-        restaurant.getImagesRestaurants().add(this);
-    }
+
 
 }
