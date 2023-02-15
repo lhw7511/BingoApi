@@ -5,6 +5,7 @@ import com.project.BingoApi.jpa.dto.MainParamDto;
 import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.MathExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,18 @@ public class RestaurantCustomImpl implements RestaurantCustom{
     private OrderSpecifier<?> sortStandard(MainParamDto mainParamDto) {
         if("avg".equals(mainParamDto.getGubun())){
             return review.rating.avg().desc().nullsLast();
+        }else if("distance".equals(mainParamDto.getGubun()) && StringUtils.hasText(mainParamDto.getLongitude()) && StringUtils.hasText(mainParamDto.getLatitude())){
+            return Expressions.stringTemplate("ST_Distance_Sphere({0}, {1})",
+                    Expressions.stringTemplate("POINT({0}, {1})",
+                            mainParamDto.getLongitude(),
+                            mainParamDto.getLatitude()
+                    ),
+                    Expressions.stringTemplate("POINT({0}, {1})",
+                            restaurant.longitude,
+                            restaurant.latitude
+                    )).asc();
         }
+
         return review.rating.count().desc().nullsLast();
     }
 }
