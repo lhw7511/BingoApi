@@ -62,8 +62,8 @@ public class RestaurantCustomImpl implements RestaurantCustom{
 
     private OrderSpecifier<?> sortStandard(MainParamDto mainParamDto) {
         if("avg".equals(mainParamDto.getGubun())){
-            return review.rating.avg().desc();
+            return review.rating.avg().desc().nullsLast();
         }
-        return review.rating.count().desc();
+        return review.rating.count().desc().nullsLast();
     }
 }
