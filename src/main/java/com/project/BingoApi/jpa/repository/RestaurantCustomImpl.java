@@ -65,7 +65,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
     private OrderSpecifier<?> sortStandard(MainParamDto mainParamDto) {
         if("avg".equals(mainParamDto.getGubun())){
             return review.rating.avg().desc().nullsLast();
-        }else if("distance".equals(mainParamDto.getGubun()) && StringUtils.hasText(mainParamDto.getLongitude()) && StringUtils.hasText(mainParamDto.getLatitude())){
+        }else if("distance".equals(mainParamDto.getGubun()) && StringUtils.hasLength(mainParamDto.getLongitude()) && StringUtils.hasLength(mainParamDto.getLatitude())){
             return Expressions.stringTemplate("ST_Distance_Sphere({0}, {1})",
                     Expressions.stringTemplate("POINT({0}, {1})",
                             mainParamDto.getLongitude(),
