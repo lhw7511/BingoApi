@@ -23,7 +23,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("mainList")
-    public Page<RestaurantDto> getMainList(@RequestBody  MainParamDto mainParamDto){
+    public Page<RestaurantDto> getMainList(MainParamDto mainParamDto){
         PageRequest pageRequest = PageRequest.of(mainParamDto.getCurPage()-1,4);
         return restaurantService.getMainList(mainParamDto,pageRequest);
     }
