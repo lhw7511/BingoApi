@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("mainList")
-    public Page<RestaurantDto> getMainList(MainParamDto mainParamDto){
+    public Page<RestaurantDto> getMainList(@RequestBody  MainParamDto mainParamDto){
         PageRequest pageRequest = PageRequest.of(mainParamDto.getCurPage()-1,4);
         return restaurantService.getMainList(mainParamDto,pageRequest);
     }
