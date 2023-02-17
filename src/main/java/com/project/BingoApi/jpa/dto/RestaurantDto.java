@@ -44,6 +44,8 @@ public class RestaurantDto {
     private Long cnt;
 
 
+    private String parkingYn;
+
 
 
     public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt){
@@ -54,6 +56,7 @@ public class RestaurantDto {
             this.latitude = restaurant.getLatitude();
             this.longitude = restaurant.getLongitude();
             this.openTime = restaurant.getOpenTime();
+            this.parkingYn = restaurant.getParkingYn();
             this.category = new CategoryDto(restaurant.getCategory());
             this.region = new RegionDto(restaurant.getRegion());
             this.avgRating = avgRating;
