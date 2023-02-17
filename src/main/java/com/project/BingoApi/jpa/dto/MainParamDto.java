@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class MainParamDto {
 
-    private String gubun;
+    private String guBun;
 
     private Long regionId;
 
@@ -16,4 +16,8 @@ public class MainParamDto {
     private String latitude;
 
     private String longitude;
+
+    private String parkingYn;
+
+    private String distanceLimit;
 }

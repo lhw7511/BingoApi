@@ -42,6 +42,8 @@ public class Restaurant {
     @Column(name = "open_time")
     private String openTime;
 
+    private String parkingYn;
+
 
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<ImageRestaurant> imagesRestaurants = new ArrayList<>();
