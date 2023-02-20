@@ -2,7 +2,7 @@
 <configuration>
 
     <!-- 로그파일 저장 경로 -->
-    <property name="LOG_DIR" value="/Users/beintech/Documents/bingoLog" />
+    <property name="LOG_DIR" value="/home/ec2-user/app/log" />
 
     <!-- CONSOLE -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
