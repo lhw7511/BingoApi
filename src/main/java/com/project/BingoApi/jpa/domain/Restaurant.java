@@ -52,6 +52,14 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    private List<Food> foods = new ArrayList<>();
+
+
+    public void setFoods(Food food){
+        this.foods.add(food);
+        food.setRestaurant(this);
+    }
 
     public void setImagesRestaurants(ImageRestaurant imageRestaurant) {
         this.imagesRestaurants.add(imageRestaurant);
