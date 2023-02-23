@@ -1,6 +1,6 @@
 package com.project.BingoApi.jpa.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.BingoApi.jpa.domain.*;
 import lombok.Data;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
@@ -46,6 +45,9 @@ public class RestaurantDto {
 
     private String parkingYn;
 
+    private List<FoodDto> foods = new ArrayList<>();
+
+    private List<ReviewDto> reviews = new ArrayList<>();
 
 
     public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt){
@@ -66,4 +68,19 @@ public class RestaurantDto {
                     .collect(Collectors.toList());
     }
 
+    public RestaurantDto(Restaurant restaurant, ReviewDto reviewDto) {
+        this.restaurantId = restaurant.getId();
+        this.name = restaurant.getName();
+        this.address = restaurant.getAddress();
+        this.phoneNumber = restaurant.getPhoneNumber();
+        this.latitude = restaurant.getLatitude();
+        this.longitude = restaurant.getLongitude();
+        this.openTime = restaurant.getOpenTime();
+        this.parkingYn = restaurant.getParkingYn();
+        this.avgRating = Math.round(reviewDto.getAvgRating() * 100) / 100.0;
+        this.cnt = reviewDto.getCnt();
+        restaurant.getImagesRestaurants().stream().forEach(r -> r.getImageUrl());
+        imagesRestaurants = restaurant.getImagesRestaurants().stream().map(imageRestaurant -> new ImageRestaurantDto(imageRestaurant))
+                .collect(Collectors.toList());
+    }
 }
