@@ -1,5 +1,7 @@
 package com.project.BingoApi.jpa.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Food {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
