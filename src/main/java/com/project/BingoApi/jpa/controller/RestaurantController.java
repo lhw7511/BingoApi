@@ -22,9 +22,15 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+    //메인화면 목록
     @RequestMapping("mainList")
     public Page<RestaurantDto> getMainList(MainParamDto mainParamDto){
-        PageRequest pageRequest = PageRequest.of(mainParamDto.getCurPage()-1,4);
-        return restaurantService.getMainList(mainParamDto,pageRequest);
+        return restaurantService.getMainList(mainParamDto);
+    }
+
+    //컨텐츠 상세화면
+    @RequestMapping("restaurantOne")
+    public RestaurantDto getRestaurantOne(Long id){
+        return restaurantService.getRestaurantOne(id);
     }
 }
