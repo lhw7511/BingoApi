@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface FoodRepository extends JpaRepository<Food,Long> {
-    @Query("select new com.project.BingoApi.jpa.dto.FoodDto(f.id,f.name,f.price) from Food f where f.restaurant.id =:restaurantId order by f.price asc")
-    List<FoodDto> getTop3Menu(@Param("restaurantId") Long restaurantId, Pageable pageable);
+    @Query("select f from Food f where f.restaurant.id =:restaurantId order by f.price asc")
+    List<Food> getTop3Menu(@Param("restaurantId") Long restaurantId, Pageable pageable);
 }

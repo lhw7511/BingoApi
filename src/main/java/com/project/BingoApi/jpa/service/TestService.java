@@ -26,4 +26,9 @@ public class TestService {
     public List<Member> getMemberList(Long id) throws  Exception{
         return testRepository.getMemberList(id);
     }
+
+    public void jpaAuditing(){
+        Optional<Member> byId = testRepository.findById(1L);
+        byId.get().setName("updateName");
+    }
 }

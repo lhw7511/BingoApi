@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Category {
+public class Category  extends  BaseEntity{
 
     @Id
     private  String categoryKey;

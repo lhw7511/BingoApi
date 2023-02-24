@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    @Query("select rv from Review rv where rv.restaurant.id =:restaurantId")
+    @Query("select rv from Review rv where rv.restaurant.id =:restaurantId  order by rv.id desc")
     List<Review> getTop3Review(@Param("restaurantId") Long restaurantId, Pageable pageable);
 
     @Query("select new com.project.BingoApi.jpa.dto.ReviewDto(avg(rv.rating),count(*)) from Review rv where rv.restaurant.id =:restaurantId")
