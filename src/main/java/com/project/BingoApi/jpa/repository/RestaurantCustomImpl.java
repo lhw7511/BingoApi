@@ -42,7 +42,11 @@ public class RestaurantCustomImpl implements RestaurantCustom{
                 .leftJoin(restaurant.reviews, review)
                 .leftJoin(restaurant.category, category).fetchJoin()
                 .leftJoin(restaurant.region, region).fetchJoin()
-                .where(filterParkingYn(mainParamDto),filterDistance(mainParamDto))
+                .where(
+                        filterParkingYn(mainParamDto),
+                        filterDistance(mainParamDto),
+                        filterCategory(mainParamDto)
+                )
                 .groupBy(restaurant.id)
                 .orderBy(filterSort(mainParamDto))
                 .offset(pageable.getOffset())
@@ -53,7 +57,11 @@ public class RestaurantCustomImpl implements RestaurantCustom{
                     restaurant.count()
             )
                 .from(restaurant)
-                .where(filterParkingYn(mainParamDto),filterDistance(mainParamDto));
+                .where(
+                        filterParkingYn(mainParamDto),
+                        filterDistance(mainParamDto),
+                        filterCategory(mainParamDto)
+                );
 
 
         List<RestaurantDto> resultList = new ArrayList<>();
@@ -64,6 +72,13 @@ public class RestaurantCustomImpl implements RestaurantCustom{
             resultList.add(new RestaurantDto(tmpRestaurant,avgRating,cnt));
         }
         return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
+    }
+    //카테고리 필터
+    private BooleanExpression filterCategory(MainParamDto mainParamDto){
+        if(mainParamDto.getCategoryKey().isEmpty()){
+           return null;
+        }
+        return category.categoryKey.in(mainParamDto.getCategoryKey());
     }
 
 

@@ -3,6 +3,7 @@ package com.project.BingoApi.jpa.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class MainParamDto {
@@ -20,4 +21,6 @@ public class MainParamDto {
     private String parkingYn;
 
     private String distanceLimit;
+
+    private List<String> categoryKey;
 }

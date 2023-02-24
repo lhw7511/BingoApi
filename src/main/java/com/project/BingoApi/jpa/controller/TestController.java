@@ -46,7 +46,7 @@ public class TestController {
         return "success";
     }
     @GetMapping("jpaAuditing")
-    public String tttt(){
+    public String auditingModifyTest(){
         testService.jpaAuditing();
         return null;
     }
