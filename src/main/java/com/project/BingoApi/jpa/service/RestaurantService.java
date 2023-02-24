@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
@@ -41,12 +43,12 @@ public class RestaurantService {
         if(tmpRestaurant.isPresent()){
             restaurant = tmpRestaurant.get();
             List<Review> top3Review = reviewRepository.getTop3Review(id,pageRequest);
-            List<FoodDto> top3Menu = foodRepository.getTop3Menu(id,pageRequest);
+            List<Food> top3Menu = foodRepository.getTop3Menu(id,pageRequest);
             ReviewDto cntAndRatingOne = reviewRepository.getCntAndRatingOne(id);
             RestaurantDto result = new RestaurantDto(
                     restaurant,cntAndRatingOne
                         );
-            result.setFoods(top3Menu);
+            result.setFoods(top3Menu.stream().map(t3m -> new FoodDto(t3m)).collect(Collectors.toList()));
             result.setReviews(top3Review.stream().map(t3r->new ReviewDto(t3r)).collect(Collectors.toList()));
 
             return result;

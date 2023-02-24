@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "image_review")
 @Getter
 @NoArgsConstructor
-public class ImageReview {
+public class ImageReview extends  BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_review_id")
     private Long id;
