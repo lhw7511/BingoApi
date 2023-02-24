@@ -32,7 +32,9 @@
 
     <root level="info">
         <appender-ref ref="CONSOLE" />
+        <!--일시적으로 로그 떨구기 중단-
         <appender-ref ref="SYSLOG" />
+        -->
     </root>
 
     <logger name="jdbc.sqlonly" level="OFF"/>
