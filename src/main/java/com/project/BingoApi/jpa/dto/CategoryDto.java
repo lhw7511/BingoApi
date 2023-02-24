@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL) // Null 값인 필드 제외
-public class CategoryDto implements Serializable {
+public class CategoryDto{
 
     private  String categoryKey;
 
