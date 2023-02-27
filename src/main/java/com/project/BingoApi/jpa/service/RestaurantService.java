@@ -4,7 +4,7 @@ import com.project.BingoApi.jpa.domain.Food;
 import com.project.BingoApi.jpa.domain.Restaurant;
 import com.project.BingoApi.jpa.domain.Review;
 import com.project.BingoApi.jpa.dto.FoodDto;
-import com.project.BingoApi.jpa.dto.MainParamDto;
+import com.project.BingoApi.jpa.dto.ParamDto;
 import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.project.BingoApi.jpa.dto.ReviewDto;
 import com.project.BingoApi.jpa.repository.FoodRepository;
@@ -13,7 +13,6 @@ import com.project.BingoApi.jpa.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,7 @@ public class RestaurantService {
     private final ReviewRepository reviewRepository;
     private final FoodRepository foodRepository;
 
-    public Page<RestaurantDto> getMainList(MainParamDto mainParamDto){
+    public Page<RestaurantDto> getMainList(ParamDto mainParamDto){
         PageRequest pageRequest = PageRequest.of(mainParamDto.getCurPage()-1,4);
         return restaurantRepository.getMainList(mainParamDto,pageRequest);
     }

@@ -4,6 +4,7 @@ package com.project.BingoApi.jpa.repository;
 import com.project.BingoApi.jpa.domain.Food;
 import com.project.BingoApi.jpa.domain.Review;
 import com.project.BingoApi.jpa.dto.ReviewDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("select new com.project.BingoApi.jpa.dto.ReviewDto(avg(rv.rating),count(*)) from Review rv where rv.restaurant.id =:restaurantId")
     ReviewDto getCntAndRatingOne(@Param("restaurantId") Long restaurantId);
+
+    @Query( value = "select rv from Review rv where rv.restaurant.id =:restaurantId order by rv.id desc",
+            countQuery = "select count(rv) from Review rv where rv.restaurant.id =:restaurantId")
+    Page<Review> getReviewList(@Param("restaurantId") Long restaurantId, Pageable pageable);
 }

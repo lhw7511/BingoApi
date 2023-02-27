@@ -1,7 +1,7 @@
 package com.project.BingoApi.jpa.repository;
 
 import com.project.BingoApi.jpa.domain.*;
-import com.project.BingoApi.jpa.dto.MainParamDto;
+import com.project.BingoApi.jpa.dto.ParamDto;
 import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
@@ -32,7 +32,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
 
 
     @Override
-    public Page<RestaurantDto> getMainList(MainParamDto mainParamDto, Pageable pageable) {
+    public Page<RestaurantDto> getMainList(ParamDto mainParamDto, Pageable pageable) {
         List<Tuple> result = jpaQueryFactory.select(
                         restaurant,
                         MathExpressions.round(review.rating.avg(),1),
@@ -74,7 +74,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
         return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
     }
     //카테고리 필터
-    private BooleanExpression filterCategory(MainParamDto mainParamDto){
+    private BooleanExpression filterCategory(ParamDto mainParamDto){
         if(mainParamDto.getCategoryKey().isEmpty()){
            return null;
         }
@@ -83,7 +83,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
 
 
     //주차여부 필터
-    private BooleanExpression filterParkingYn(MainParamDto mainParamDto){
+    private BooleanExpression filterParkingYn(ParamDto mainParamDto){
         if(!StringUtils.hasLength(mainParamDto.getParkingYn())){
             return null;
         }
@@ -91,7 +91,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
     }
 
     //반경 ?km이내 필터
-    private BooleanExpression filterDistance(MainParamDto mainParamDto){
+    private BooleanExpression filterDistance(ParamDto mainParamDto){
         if(!StringUtils.hasLength(mainParamDto.getLatitude()) || !StringUtils.hasLength(mainParamDto.getLongitude()) || !StringUtils.hasLength(mainParamDto.getDistanceLimit())){
             return null;
         }
@@ -99,7 +99,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
     }
 
     //리뷰개수, 평점, 거리순 정렬
-    private OrderSpecifier<?> filterSort(MainParamDto mainParamDto) {
+    private OrderSpecifier<?> filterSort(ParamDto mainParamDto) {
         if("avg".equals(mainParamDto.getGuBun())){
             return review.rating.avg().desc().nullsLast();
         }else if("distance".equals(mainParamDto.getGuBun()) && StringUtils.hasLength(mainParamDto.getLongitude()) && StringUtils.hasLength(mainParamDto.getLatitude())){
@@ -110,7 +110,7 @@ public class RestaurantCustomImpl implements RestaurantCustom{
     }
 
     //위도 경도를 이용해 거리계산 함수 호출
-    private StringTemplate callStDistanceSphereFunction(MainParamDto mainParamDto){
+    private StringTemplate callStDistanceSphereFunction(ParamDto mainParamDto){
         return Expressions.stringTemplate("ST_Distance_Sphere({0}, {1})",
                 Expressions.stringTemplate("POINT({0}, {1})",
                         mainParamDto.getLongitude(),
