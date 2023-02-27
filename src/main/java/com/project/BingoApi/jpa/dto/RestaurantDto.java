@@ -36,7 +36,7 @@ public class RestaurantDto {
 
     private String openTime;
 
-    private List<ImageRestaurantDto> imagesRestaurants = new ArrayList<>();
+    private List<ImageRestaurantDto> imagesRestaurants;
 
     private Double avgRating;
 
@@ -45,9 +45,9 @@ public class RestaurantDto {
 
     private String parkingYn;
 
-    private List<FoodDto> foods = new ArrayList<>();
+    private List<FoodDto> foods;
 
-    private List<ReviewDto> reviews = new ArrayList<>();
+    private List<ReviewDto> reviews;
 
 
     public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt){

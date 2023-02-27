@@ -2,12 +2,11 @@ package com.project.BingoApi.jpa.dto;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class MainParamDto {
+public class ParamDto {
 
     private String guBun;
 
@@ -24,4 +23,6 @@ public class MainParamDto {
     private String distanceLimit;
 
     private List<String> categoryKey = new ArrayList<>();
+
+    private Long restaurantId;
 }
