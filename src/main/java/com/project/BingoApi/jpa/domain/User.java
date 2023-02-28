@@ -1,12 +1,11 @@
 package com.project.BingoApi.jpa.domain;
 
+import com.project.BingoApi.jpa.dto.UserDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,8 @@ import java.util.List;
 public class User extends  BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long id;
 
     private String fullName;
 
@@ -40,4 +40,15 @@ public class User extends  BaseEntity{
         return new ArrayList<>();
     }
 
+    @Builder
+    public User(Long userId, String fullName, String password, String email, String address, String profileUrl, String accessToken, String roles) {
+        this.id = userId;
+        this.fullName = fullName;
+        this.password = password;
+        this.email = email;
+        this.address = address;
+        this.profileUrl = profileUrl;
+        this.accessToken = accessToken;
+        this.roles = roles;
+    }
 }
