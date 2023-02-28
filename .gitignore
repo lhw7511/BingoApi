@@ -39,3 +39,4 @@ out/
 ### properties ###
 application-db.properties
 application-storage.properties
+application-auth.properties

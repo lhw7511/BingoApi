@@ -50,4 +50,14 @@ public class TestController {
         testService.jpaAuditing();
         return null;
     }
+
+    @PostMapping("user/user")
+    public String ttt(){
+        return "user";
+    }
+
+    @PostMapping("user/admin")
+    public String ttttt(){
+        return "admin";
+    }
 }
