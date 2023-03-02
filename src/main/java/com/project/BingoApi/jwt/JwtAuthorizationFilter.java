@@ -2,6 +2,7 @@ package com.project.BingoApi.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.project.BingoApi.auth.JwtTokenInfo;
 import com.project.BingoApi.auth.PrincipalDetails;
 import com.project.BingoApi.jpa.domain.User;
 import com.project.BingoApi.jpa.repository.UserRepository;
@@ -36,28 +37,34 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
     //인증이나 권한 요청이 필요한주소가 들어오면 타게되는 메소드
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String jwtHeader = request.getHeader("Authorization");
+        String jwtHeader = request.getHeader(JwtTokenInfo.getInfoByKey("header"));
 
-        if(jwtHeader == null || !jwtHeader.startsWith("Bearer")){
+        if(jwtHeader == null || !jwtHeader.startsWith(JwtTokenInfo.getInfoByKey("prefix"))){
             chain.doFilter(request,response);
             return;
         }
 
-        String jwtToken = jwtHeader.replace("Bearer ","");
+        String jwtToken = jwtHeader.replace(JwtTokenInfo.getInfoByKey("prefix"),"");
 
-        String email = JWT.require(Algorithm.HMAC512("bingo")).build().verify(jwtToken).getClaim("email").asString();
+        try{
+            String email = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtToken).getClaim("email").asString();
 
-        if(email != null){
-            User user = userRepository.findByEmail(email);
+            if(email != null){
+                User user = userRepository.findByEmail(email);
 
-            PrincipalDetails principalDetails = new PrincipalDetails(user);
-            //jwt토큰 서명이 완료되면 객체생성
-            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
+                PrincipalDetails principalDetails = new PrincipalDetails(user);
+                //jwt토큰 서명이 완료되면 객체생성
+                Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
 
-            //강제로 시큐리티 세션에 접근하여 객체저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                //강제로 시큐리티 세션에 접근하여 객체저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            chain.doFilter(request,response);
+                chain.doFilter(request,response);
+            }
+        }catch (Exception e){
+                logger.info(e.getMessage());
+                chain.doFilter(request,response);
         }
+
     }
 }
