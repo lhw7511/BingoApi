@@ -3,6 +3,7 @@ package com.project.BingoApi.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.BingoApi.auth.JwtTokenInfo;
 import com.project.BingoApi.auth.PrincipalDetails;
 import com.project.BingoApi.jpa.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -57,14 +58,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        System.out.println(JwtTokenInfo.getInfoByKey("secret"));
         String token = JWT.create()
-                .withSubject("bingo토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*10)))
+                .withSubject(JwtTokenInfo.getInfoByKey("secret"))
+                .withExpiresAt(new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("expiration"))))
                 .withClaim("id",principalDetails.getUser().getId())
                 .withClaim("email",principalDetails.getUser().getEmail())
-                .sign(Algorithm.HMAC512("bingo"));
-        response.addHeader("Authorization","Bearer "+token);
+                .sign(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret")));
+        response.addHeader(JwtTokenInfo.getInfoByKey("header"),JwtTokenInfo.getInfoByKey("prefix") + token);
 
-        System.out.println(token);
     }
 }
