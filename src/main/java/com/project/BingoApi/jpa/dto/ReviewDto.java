@@ -23,8 +23,6 @@ public class ReviewDto {
 
     private Restaurant restaurant;
 
-    private String userId;
-
     private String content;
 
     private Double rating;
@@ -33,6 +31,9 @@ public class ReviewDto {
 
     private Long cnt;
 
+    private String username;
+
+    private String userProfileUrl;
     private List<ImageReviewDto> imageReviewDtos = new ArrayList<>();
 
 
@@ -43,7 +44,8 @@ public class ReviewDto {
 
     public ReviewDto(Review review) {
         this.reviewId  = review.getId();
-        this.userId = review.getUserId();
+        this.username = review.getUser().getFullName();
+        this.userProfileUrl = review.getUser().getProfileUrl();
         this.rating = review.getRating();
         this.content = review.getContent();
         review.getImageReviews().stream().forEach(rv -> rv.getImageUrl());

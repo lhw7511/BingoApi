@@ -25,6 +25,8 @@ public class UserDto {
 
     private String accessToken;
 
+    private List<ReviewDto> reviewDtos;
+
     private String roles;
 
     public List<String> getRoleList(){
