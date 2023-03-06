@@ -60,12 +60,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
         String token = JWT.create()
-                .withSubject(JwtTokenInfo.getInfoByKey("secret"))
+                .withSubject("ATK")
                 .withExpiresAt(new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("expiration"))))
                 .withClaim("id",principalDetails.getUser().getId())
                 .withClaim("email",principalDetails.getUser().getEmail())
                 .sign(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret")));
-        response.addHeader(JwtTokenInfo.getInfoByKey("header"),JwtTokenInfo.getInfoByKey("prefix") + token);
 
+        String refreshToken = JWT.create()
+                .withSubject("RTK")
+                .withExpiresAt(new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("refreshExpiration"))))
+                .sign(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret")));
+
+        response.addHeader(JwtTokenInfo.getInfoByKey("header"),JwtTokenInfo.getInfoByKey("prefix") + token);
+        response.addHeader(JwtTokenInfo.getInfoByKey("refreshHeader"),JwtTokenInfo.getInfoByKey("prefix") + refreshToken);
     }
 }
