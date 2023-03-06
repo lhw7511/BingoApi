@@ -2,6 +2,7 @@ package com.project.BingoApi.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.*;
 import com.project.BingoApi.auth.JwtTokenInfo;
 import com.project.BingoApi.auth.PrincipalDetails;
 import com.project.BingoApi.jpa.domain.User;
@@ -17,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SignatureException;
 
 // 시큐리티가 filter가지고 있는데 그 필터중에 BasicAuthenticationFilter 라는 것이 있음.
 // 권한이나 인증이 필요한 특정 주소를 요청했을때 위 필터를 무조건 타게 되어있음.
@@ -58,13 +61,28 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
 
                 //강제로 시큐리티 세션에 접근하여 객체저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                chain.doFilter(request,response);
             }
-        }catch (Exception e){
-                logger.info(e.getMessage());
-                chain.doFilter(request,response);
+        } catch (SignatureVerificationException | SignatureGenerationException e) {
+            logger.info("잘못된 JWT 서명입니다.");
+        } catch (TokenExpiredException e) {
+                PrintWriter writer = null;
+            try {
+                writer = response.getWriter();
+                writer.print("expire");
+            } catch (Exception ee){
+                logger.info(ee.getMessage());
+            } finally {
+                writer.close();
+            }
+            logger.info("만료된 JWT 토큰입니다.");
+        } catch (IllegalArgumentException | JWTVerificationException e) {
+            logger.info("JWT 토큰이 잘못되었습니다.");
+        } catch (Exception e){
+            logger.info(e.getMessage());
+        } finally {
+            chain.doFilter(request,response);
         }
+
 
     }
 }
