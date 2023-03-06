@@ -4,6 +4,7 @@ import com.project.BingoApi.jpa.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class User extends  BaseEntity{
     private String accessToken;
 
     private String roles;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public List<String> getRoleList(){
         if(this.roles.length() > 0){

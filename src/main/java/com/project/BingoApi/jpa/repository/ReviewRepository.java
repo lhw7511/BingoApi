@@ -13,13 +13,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    @Query("select rv from Review rv where rv.restaurant.id =:restaurantId  order by rv.id desc")
+    @Query("select rv from Review rv left join fetch rv.user where rv.restaurant.id =:restaurantId  order by rv.id desc")
     List<Review> getTop3Review(@Param("restaurantId") Long restaurantId, Pageable pageable);
 
     @Query("select new com.project.BingoApi.jpa.dto.ReviewDto(avg(rv.rating),count(*)) from Review rv where rv.restaurant.id =:restaurantId")
     ReviewDto getCntAndRatingOne(@Param("restaurantId") Long restaurantId);
 
-    @Query( value = "select rv from Review rv where rv.restaurant.id =:restaurantId order by rv.id desc",
+    @Query( value = "select rv from Review rv  left join fetch rv.user where rv.restaurant.id =:restaurantId order by rv.id desc",
             countQuery = "select count(rv) from Review rv where rv.restaurant.id =:restaurantId")
     Page<Review> getReviewList(@Param("restaurantId") Long restaurantId, Pageable pageable);
 }

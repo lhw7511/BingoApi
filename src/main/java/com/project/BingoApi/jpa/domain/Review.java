@@ -27,9 +27,9 @@ public class Review extends  BaseEntity{
     @Setter
     private Restaurant restaurant;
 
-    @Column(name = "user_id")
-    private String userId;
-
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -44,5 +44,10 @@ public class Review extends  BaseEntity{
     public void setImageReviews(ImageReview imageReview){
         this.imageReviews.add(imageReview);
         imageReview.setReview(this);
+    }
+
+    public void setUser(User user){
+        this.user = user;
+        user.getReviews().add(this);
     }
 }
