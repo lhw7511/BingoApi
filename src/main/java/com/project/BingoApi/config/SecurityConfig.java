@@ -1,6 +1,7 @@
 package com.project.BingoApi.config;
 
 import com.project.BingoApi.jpa.repository.UserRepository;
+import com.project.BingoApi.jpa.service.TokenService;
 import com.project.BingoApi.jwt.JwtAuthenticationFilter;
 import com.project.BingoApi.jwt.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final UserRepository userRepository;
 
+    private final TokenService tokenService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -28,10 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(corsFilter)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .formLogin().disable()
                 .httpBasic().disable()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(),tokenService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
                 .antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll();
