@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.BingoApi.auth.JwtTokenInfo;
 import com.project.BingoApi.auth.PrincipalDetails;
+import com.project.BingoApi.jpa.domain.RefreshToken;
 import com.project.BingoApi.jpa.domain.User;
+import com.project.BingoApi.jpa.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -25,6 +28,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+
+
+    private final TokenService tokenService;
 
 
     // /login 요청을하면 로그인 시도를 위해서 실행됨
@@ -58,18 +64,25 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        Date accessTokenExpireDt = new Date(System.currentTimeMillis() + 60000);
+        Date refreshTokenExpireDt = new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("refreshExpiration")));
+
 
         String token = JWT.create()
                 .withSubject("ATK")
-                .withExpiresAt(new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("expiration"))))
+                .withExpiresAt(accessTokenExpireDt)
                 .withClaim("id",principalDetails.getUser().getId())
                 .withClaim("email",principalDetails.getUser().getEmail())
                 .sign(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret")));
 
         String refreshToken = JWT.create()
                 .withSubject("RTK")
-                .withExpiresAt(new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("refreshExpiration"))))
+                .withExpiresAt(refreshTokenExpireDt)
+                .withClaim("id",principalDetails.getUser().getId())
+                .withClaim("email",principalDetails.getUser().getEmail())
                 .sign(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret")));
+
+        tokenService.saveRefreshToken(principalDetails.getUser().getId(), refreshToken, refreshTokenExpireDt);
 
         response.addHeader(JwtTokenInfo.getInfoByKey("header"),JwtTokenInfo.getInfoByKey("prefix") + token);
         response.addHeader(JwtTokenInfo.getInfoByKey("refreshHeader"),JwtTokenInfo.getInfoByKey("prefix") + refreshToken);
