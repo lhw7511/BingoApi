@@ -51,7 +51,6 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
     //인증이나 권한 요청이 필요한주소가 들어오면 타게되는 메소드
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HashMap<String,String> responseMap = new HashMap<>();
         String jwtHeader = request.getHeader(JwtTokenInfo.getInfoByKey("header"));
 
         if(jwtHeader == null || !jwtHeader.startsWith(JwtTokenInfo.getInfoByKey("prefix"))){
@@ -62,47 +61,18 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
         String jwtToken = jwtHeader.replace(JwtTokenInfo.getInfoByKey("prefix"),"");
 
         try{
-            DecodedJWT decodeJwt = JWT.decode(jwtToken);
-            if(decodeJwt.getExpiresAt().before(new Date())){
-                String jwtRefreshHeader = request.getHeader(JwtTokenInfo.getInfoByKey("refreshHeader"));
-                String jwtRefreshToken = jwtRefreshHeader.replace(JwtTokenInfo.getInfoByKey("prefix"),"");
-                String userEmail = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtRefreshToken).getClaim("email").asString();
-                Long userId = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtRefreshToken).getClaim("id").asLong();
+            String email = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtToken).getClaim("email").asString();
+            if(StringUtils.hasLength(email)){
 
-                RefreshToken chkToken = tokenService.findById(userId);
-                if(chkToken != null){
-                    if(chkToken.getExpireDt().before(new Date())){
-                        responseMap.put("status","logout");
-                        new ObjectMapper().writeValue(response.getOutputStream(), responseMap);
-                    }else{
-                        String accessToken = JwtTokenProvider.createAccessToken(userId, userEmail, new Date(System.currentTimeMillis() + 60000));
+                User user = userRepository.findByEmail(email);
 
-                        User user = userRepository.findByEmail(userEmail);
-                        PrincipalDetails principalDetails = new PrincipalDetails(user);
-                        //jwt토큰 서명이 완료되면 객체생성
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
-                        //강제로 시큐리티 세션에 접근하여 객체저장
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        response.addHeader(JwtTokenInfo.getInfoByKey("header"),JwtTokenInfo.getInfoByKey("prefix") + accessToken);
-                    }
+                PrincipalDetails principalDetails = new PrincipalDetails(user);
+                //jwt토큰 서명이 완료되면 객체생성
+                Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
 
-                }
-
-            }else{
-                String email = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtToken).getClaim("email").asString();
-                if(StringUtils.hasLength(email)){
-
-                    User user = userRepository.findByEmail(email);
-
-                    PrincipalDetails principalDetails = new PrincipalDetails(user);
-                    //jwt토큰 서명이 완료되면 객체생성
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
-
-                    //강제로 시큐리티 세션에 접근하여 객체저장
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+                //강제로 시큐리티 세션에 접근하여 객체저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
         } catch (SignatureVerificationException | SignatureGenerationException e) {
             logger.info("잘못된 JWT 서명입니다.");
         } catch (TokenExpiredException e) {
