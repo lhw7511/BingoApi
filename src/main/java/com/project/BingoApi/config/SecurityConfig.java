@@ -22,6 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenService tokenService;
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -34,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(),tokenService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository,tokenService))
                 .authorizeRequests()
                 .antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll();

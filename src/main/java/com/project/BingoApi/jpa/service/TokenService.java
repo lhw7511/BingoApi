@@ -16,6 +16,10 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
 
+    public RefreshToken findById(Long userId){
+        return tokenRepository.findByUserId(userId);
+    }
+
     public void saveRefreshToken(Long id, String tokenName, Date expireDt){
         RefreshToken getOne = tokenRepository.findByUserId(id);
         if(getOne != null){
