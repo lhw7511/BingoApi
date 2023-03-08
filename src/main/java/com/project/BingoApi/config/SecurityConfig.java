@@ -1,5 +1,7 @@
 package com.project.BingoApi.config;
 
+import com.project.BingoApi.auth.JwtAccessDeniedHandler;
+import com.project.BingoApi.auth.JwtAuthenticationEntryPoint;
 import com.project.BingoApi.jpa.repository.UserRepository;
 import com.project.BingoApi.jpa.service.TokenService;
 import com.project.BingoApi.jwt.JwtAuthenticationFilter;
@@ -22,6 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenService tokenService;
 
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
 
     @Override
@@ -35,6 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter)
                 .formLogin().disable()
                 .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(),tokenService))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository,tokenService))
                 .authorizeRequests()
