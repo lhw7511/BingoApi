@@ -60,31 +60,22 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
 
         String jwtToken = jwtHeader.replace(JwtTokenInfo.getInfoByKey("prefix"),"");
 
-        try{
-            String email = JWT.require(Algorithm.HMAC512(JwtTokenInfo.getInfoByKey("secret"))).build().verify(jwtToken).getClaim("email").asString();
-            if(StringUtils.hasLength(email)){
+        String email = JwtTokenProvider.validToken(jwtToken, request);
 
-                User user = userRepository.findByEmail(email);
+        if(StringUtils.hasLength(email)){
 
-                PrincipalDetails principalDetails = new PrincipalDetails(user);
-                //jwt토큰 서명이 완료되면 객체생성
-                Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
+            User user = userRepository.findByEmail(email);
 
-                //강제로 시큐리티 세션에 접근하여 객체저장
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (SignatureVerificationException | SignatureGenerationException e) {
-            logger.info("잘못된 JWT 서명입니다.");
-        } catch (TokenExpiredException e) {
-            logger.info("만료된 JWT 토큰입니다.");
-        } catch (IllegalArgumentException | JWTVerificationException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
-        } catch (Exception e){
-            logger.info(e.getMessage());
-        } finally {
-            chain.doFilter(request,response);
+            PrincipalDetails principalDetails = new PrincipalDetails(user);
+            //jwt토큰 서명이 완료되면 객체생성
+            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,null,principalDetails.getAuthorities());
+
+            //강제로 시큐리티 세션에 접근하여 객체저장
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        chain.doFilter(request,response);
 
     }
+
 }
