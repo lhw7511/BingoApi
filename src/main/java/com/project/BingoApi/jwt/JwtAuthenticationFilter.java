@@ -57,6 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //세션에 authentication저장
             return authentication;
         } catch (Exception e) {
+            logger.info("login exception");
             throw new UsernameNotFoundException("잘못된 정보입니다.");
         }
 
@@ -100,6 +101,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         HashMap<String,String> responseMap = new HashMap<>();
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         responseMap.put("status","fail");
         responseMap.put("errorMessage",errorMessage);
         new ObjectMapper().writeValue(response.getOutputStream(), responseMap);
