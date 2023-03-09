@@ -56,8 +56,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             //세션에 authentication저장
             return authentication;
-        } catch (IOException e) {
-            return null;
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("잘못된 정보입니다.");
         }
 
     }
@@ -73,7 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = JwtTokenProvider.createAccessToken(principalDetails.getUser().getId(),principalDetails.getUser().getEmail(),accessTokenExpireDt);
         String refreshToken = JwtTokenProvider.createRefreshToken(principalDetails.getUser().getId(),principalDetails.getUser().getEmail(),refreshTokenExpireDt);
-        
+
         tokenService.saveRefreshToken(principalDetails.getUser().getId(), refreshToken, refreshTokenExpireDt);
 
         HashMap<String,String> responseMap = new HashMap<>();
