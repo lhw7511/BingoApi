@@ -25,4 +25,6 @@ public class ParamDto {
     private List<String> categoryKey = new ArrayList<>();
 
     private Long restaurantId;
+
+    private String keyword;
 }
