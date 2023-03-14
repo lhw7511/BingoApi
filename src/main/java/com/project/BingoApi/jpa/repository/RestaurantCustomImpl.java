@@ -45,7 +45,8 @@ public class RestaurantCustomImpl implements RestaurantCustom{
                 .where(
                         filterParkingYn(mainParamDto),
                         filterDistance(mainParamDto),
-                        filterCategory(mainParamDto)
+                        filterCategory(mainParamDto),
+                        filterKeyword(mainParamDto)
                 )
                 .groupBy(restaurant.id)
                 .orderBy(filterSort(mainParamDto))
@@ -60,7 +61,8 @@ public class RestaurantCustomImpl implements RestaurantCustom{
                 .where(
                         filterParkingYn(mainParamDto),
                         filterDistance(mainParamDto),
-                        filterCategory(mainParamDto)
+                        filterCategory(mainParamDto),
+                        filterKeyword(mainParamDto)
                 );
 
 
@@ -73,6 +75,16 @@ public class RestaurantCustomImpl implements RestaurantCustom{
         }
         return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
     }
+    //검색필터
+    private BooleanExpression filterKeyword(ParamDto mainParamDto){
+        if(!StringUtils.hasLength(mainParamDto.getKeyword())){
+            return null;
+        }
+
+        return restaurant.name.contains(mainParamDto.getKeyword()).or(region.regionName.contains(mainParamDto.getKeyword()));
+    }
+
+
     //카테고리 필터
     private BooleanExpression filterCategory(ParamDto mainParamDto){
         if(mainParamDto.getCategoryKey().isEmpty()){
