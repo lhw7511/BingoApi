@@ -42,7 +42,7 @@ public class RestaurantDto {
 
     private Long cnt;
 
-
+    private String distanceGap;
     private String parkingYn;
 
     private List<FoodDto> foods;
@@ -50,7 +50,7 @@ public class RestaurantDto {
     private List<ReviewDto> reviews;
 
 
-    public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt){
+    public RestaurantDto(Restaurant restaurant, Double avgRating, Long cnt, String distanceGap){
             this.restaurantId = restaurant.getId();
             this.name = restaurant.getName();
             this.address = restaurant.getAddress();
@@ -63,6 +63,7 @@ public class RestaurantDto {
             this.region = new RegionDto(restaurant.getRegion());
             this.avgRating = avgRating;
             this.cnt = cnt;
+            this.distanceGap = distanceGap;
             restaurant.getImagesRestaurants().stream().forEach(r -> r.getImageUrl());
             imagesRestaurants = restaurant.getImagesRestaurants().stream().map(imageRestaurant -> new ImageRestaurantDto(imageRestaurant))
                     .collect(Collectors.toList());

@@ -5,10 +5,7 @@ import com.project.BingoApi.jpa.dto.ParamDto;
 import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.MathExpressions;
-import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +33,9 @@ public class RestaurantCustomImpl implements RestaurantCustom{
         List<Tuple> result = jpaQueryFactory.select(
                         restaurant,
                         MathExpressions.round(review.rating.avg(),1),
-                        review.rating.count()
+                        review.rating.count(),
+                        callStDistanceSphereFunction(mainParamDto)
+
                 )
                 .from(restaurant)
                 .leftJoin(restaurant.reviews, review)
@@ -71,7 +70,12 @@ public class RestaurantCustomImpl implements RestaurantCustom{
             Restaurant tmpRestaurant = tuple.get(restaurant);
             Double avgRating = tuple.get(MathExpressions.round(review.rating.avg(),1));
             Long cnt = tuple.get(review.rating.count());
-            resultList.add(new RestaurantDto(tmpRestaurant,avgRating,cnt));
+            String distanceGap = tuple.get(callStDistanceSphereFunction(mainParamDto));
+            if(!StringUtils.hasLength(distanceGap)){
+                distanceGap = "-1";
+            }
+
+            resultList.add(new RestaurantDto(tmpRestaurant,avgRating,cnt,distanceGap));
         }
         return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
     }
