@@ -27,4 +27,6 @@ public class ParamDto {
     private Long restaurantId;
 
     private String keyword;
+
+    private String distanceGap;
 }
