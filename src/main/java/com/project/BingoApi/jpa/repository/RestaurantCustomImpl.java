@@ -73,8 +73,9 @@ public class RestaurantCustomImpl implements RestaurantCustom{
             String distanceGap = tuple.get(callStDistanceSphereFunction(mainParamDto));
             if(!StringUtils.hasLength(distanceGap)){
                 distanceGap = "-1";
+            }else{
+                distanceGap = String.valueOf(Math.round(Double.parseDouble(distanceGap))) + "m";
             }
-
             resultList.add(new RestaurantDto(tmpRestaurant,avgRating,cnt,distanceGap));
         }
         return PageableExecutionUtils.getPage(resultList,pageable,total::fetchOne);
