@@ -27,8 +27,12 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
 
-    public RefreshToken findById(Long userId){
+    public RefreshToken findByUserId(Long userId){
         return tokenRepository.findByUserId(userId);
+    }
+
+    public void deleteRefreshToken(Long userId){
+        tokenRepository.delete(tokenRepository.findByUserId(userId));
     }
 
     public void saveRefreshToken(Long id, String tokenName, Date expireDt){

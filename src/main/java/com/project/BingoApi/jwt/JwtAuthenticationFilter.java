@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-        Date accessTokenExpireDt = new Date(System.currentTimeMillis() + 60000);
+        Date accessTokenExpireDt = new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("expiration")));
         Date refreshTokenExpireDt = new Date(System.currentTimeMillis() + Integer.parseInt(JwtTokenInfo.getInfoByKey("refreshExpiration")));
 
 

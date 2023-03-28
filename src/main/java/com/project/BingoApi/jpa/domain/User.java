@@ -37,6 +37,9 @@ public class User extends  BaseEntity{
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<WishList> wishLists = new ArrayList<>();
+
     public List<String> getRoleList(){
         if(this.roles.length() > 0){
             return Arrays.asList(this.roles.split(","));
@@ -44,6 +47,10 @@ public class User extends  BaseEntity{
         return new ArrayList<>();
     }
 
+    public void setWishLists(WishList wishList){
+        this.wishLists.add(wishList);
+        wishList.setUser(this);
+    }
     @Builder
     public User(Long userId, String fullName, String password, String email, String address, String profileUrl, String accessToken, String roles) {
         this.id = userId;
