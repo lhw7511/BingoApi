@@ -56,6 +56,9 @@ public class Restaurant extends  BaseEntity{
     private List<Food> foods = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    private List<WishList> wishLists = new ArrayList<>();
+
     public void setFoods(Food food){
         this.foods.add(food);
         food.setRestaurant(this);

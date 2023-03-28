@@ -22,6 +22,10 @@ public class UserService {
         return  new UserDto(user);
     }
 
+    public UserDto getMyPage(String email){
+        return userRepository.getMyPage(email);
+    }
+
     public User joinUser(User user){
         return userRepository.save(user);
     }

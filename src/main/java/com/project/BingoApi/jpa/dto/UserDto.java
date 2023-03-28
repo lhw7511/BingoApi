@@ -30,6 +30,10 @@ public class UserDto {
 
     private List<ReviewDto> reviewDtos;
 
+    private Long reviewCount;
+
+    private Long wishListCount;
+
     private String roles;
 
     public List<String> getRoleList(){
@@ -48,5 +52,16 @@ public class UserDto {
         this.profileUrl = user.getProfileUrl();
         this.roles = user.getRoles();
 
+    }
+
+    public UserDto(User user,Long reviewCount, Long wishListCount){
+        this.userId = user.getId();
+        this.fullName = user.getFullName();
+        this.email = user.getEmail();
+        this.address = user.getAddress();
+        this.profileUrl = user.getProfileUrl();
+        this.roles = user.getRoles();
+        this.reviewCount = reviewCount;
+        this.wishListCount = wishListCount;
     }
 }
