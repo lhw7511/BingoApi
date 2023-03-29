@@ -7,6 +7,7 @@ import com.project.BingoApi.auth.PrincipalDetails;
 import com.project.BingoApi.jpa.domain.Restaurant;
 import com.project.BingoApi.jpa.domain.User;
 import com.project.BingoApi.jpa.domain.WishList;
+import com.project.BingoApi.jpa.dto.RestaurantDto;
 import com.project.BingoApi.jpa.dto.UserDto;
 import com.project.BingoApi.jpa.repository.RestaurantRepository;
 import com.project.BingoApi.jpa.repository.UserRepository;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -97,6 +99,11 @@ public class UserController {
         } catch (Exception e) {
             throw new IllegalStateException("삭제 실패");
         }
+    }
+
+    @RequestMapping("user/userWishList")
+    public List<RestaurantDto> userWishList(Principal principal){
+            return userService.getUserWishList(principal.getName());
     }
 
 }
